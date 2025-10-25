@@ -1,0 +1,158 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Rick and Morty Characters";
+}
+
+<div class="bg-primary text-white py-4 py-md-5 mb-4 rounded">
+    <div class="container text-center">
+        <h1 class="display-6 display-md-3 fw-bold">Rick and Morty Character Explorer</h1>
+        <p class="lead mb-1 fs-6 fs-md-5">Created by: KIM EGOC (FinalExamApplication)</p>
+        <p class="mb-0 small">This application fetches and displays character data from the Rick and Morty API, showcasing their status, species, origin, and current location.</p>
+    </div>
+</div>
+<div class="container">
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            @Model.ErrorMessage
+        </div>
+    }
+    else if (Model.Characters.Any())
+    {
+        <div class="mb-3 text-center text-md-start">
+            <h4 class="text-muted">Total Characters: <span class="badge bg-info">@Model.TotalCharacters</span></h4>
+            <p class="text-muted small">Displaying @Model.Characters.Count characters</p>
+        </div>
+
+        <div class="d-md-none">
+            @foreach (var character in Model.Characters)
+            {
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="@character.Image" alt="@character.Name" class="img-fluid rounded" style="width: 100%; object-fit: cover;">
+                            </div>
+                            <div class="col-8">
+                                <h5 class="card-title mb-1">@character.Name</h5>
+                                <p class="card-text mb-1">
+                                    <small class="text-muted">ID: @character.Id</small>
+                                </p>
+                                <p class="mb-1">
+                                    @if (character.Status == "Alive")
+                                    {
+                                        <span class="badge bg-success">@character.Status</span>
+                                    }
+                                    else if (character.Status == "Dead")
+                                    {
+                                        <span class="badge bg-danger">@character.Status</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">@character.Status</span>
+                                    }
+                                    <span class="badge bg-info ms-1">@character.Species</span>
+                                    <span class="badge bg-warning text-dark ms-1">@character.Gender</span>
+                                </p>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="row small">
+                            <div class="col-6">
+                                <strong>Origin:</strong><br>
+                                <span class="text-muted">@(string.IsNullOrEmpty(character.Origin.Name) ? "Unknown" : character.Origin.Name)</span>
+                            </div>
+                            <div class="col-6">
+                                <strong>Location:</strong><br>
+                                <span class="text-muted">@(string.IsNullOrEmpty(character.Location.Name) ? "Unknown" : character.Location.Name)</span>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-center">
+                            <span class="badge bg-primary rounded-pill">@character.Episode.Count Episodes</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="d-none d-md-block">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width: 80px;">Avatar</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Species</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Origin</th>
+                            <th scope="col">Current Location</th>
+                            <th scope="col">Episodes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var character in Model.Characters)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@character.Image" alt="@character.Name" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                                </td>
+                                <td>@character.Id</td>
+                                <td><strong>@character.Name</strong></td>
+                                <td>
+                                    @if (character.Status == "Alive")
+                                    {
+                                        <span class="badge bg-success">@character.Status</span>
+                                    }
+                                    else if (character.Status == "Dead")
+                                    {
+                                        <span class="badge bg-danger">@character.Status</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">@character.Status</span>
+                                    }
+                                </td>
+                                <td>@character.Species</td>
+                                <td>@character.Gender</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(character.Origin.Name))
+                                    {
+                                        <small>@character.Origin.Name</small>
+                                    }
+                                    else
+                                    {
+                                        <small class="text-muted">Unknown</small>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(character.Location.Name))
+                                    {
+                                        <small>@character.Location.Name</small>
+                                    }
+                                    else
+                                    {
+                                        <small class="text-muted">Unknown</small>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary rounded-pill">@character.Episode.Count</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle-fill"></i>
+            No character data available at this time.
+        </div>
+    }
+</div>
